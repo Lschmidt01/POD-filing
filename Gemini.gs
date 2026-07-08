@@ -21,9 +21,13 @@ const GEMINI_PROMPT =
   + 'issued the document.\n'
   + '- delivery_date: the Delivery Date, formatted strictly as YYYY-MM-DD (zero-padded, '
   + '4-digit year first). If only a Ship Date is present, use that.\n'
-  + '- invoice_number: the "Driver Confirmation" number.\n'
-  + '- customer_po: the "Customer PO Number".\n'
-  + 'Use an empty string for any field you cannot read. Return the BOLs in document order.';
+  + '- invoice_number: the "Driver Confirmation" number, transcribed exactly, digit by digit.\n'
+  + '- customer_po: the "Customer PO Number", transcribed exactly, character by character.\n'
+  + 'Some pages may be rotated or scanned at an angle — read them in their correct orientation. '
+  + 'For invoice_number and customer_po especially, copy the exact characters you see; do NOT '
+  + 'guess, round, or drop digits. If a digit is genuinely unreadable, return an empty string '
+  + 'for that field rather than a wrong number. Use an empty string for any field you cannot '
+  + 'confidently read. Return the BOLs in document order.';
 
 const GEMINI_SCHEMA = {
   type: 'ARRAY',
