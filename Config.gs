@@ -17,7 +17,10 @@ const CONFIG_DEFAULTS = {
   UNSORTED_FOLDER_ID: '',  // catch-all "_Unsorted" folder
 
   // --- Reading (Gemini free tier) ---
-  GEMINI_MODEL: 'gemini-2.5-flash',   // free-tier vision model; override if needed
+  GEMINI_MODEL: 'gemini-2.5-pro',   // Pro reads long PO/invoice numbers far more faithfully
+                                    // than Flash (which drops/hallucinates digits). Slower +
+                                    // pricier per scan; switch back to gemini-2.5-flash here
+                                    // (or in the Config tab) if speed/cost matters more.
 
   // --- Filing ---
   // Filename tokens: {date} (yyyy-MM-dd), {po} (customer PO), {invoice} (driver
