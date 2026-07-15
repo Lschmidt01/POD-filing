@@ -8,6 +8,16 @@
  * on the Pacific calendar date: once it rolls over, we resume automatically.
  */
 
+/**
+ * resumeNow() — clears the daily-quota pause immediately (e.g. after topping up
+ * credit), so `run` stops skipping and processes again without waiting for the
+ * midnight-Pacific reset.
+ */
+function resumeNow() {
+  PropertiesService.getScriptProperties().deleteProperty('GEMINI_QUOTA_PAUSED_ON');
+  Logger.log('Quota pause cleared — run will process again now (assuming Gemini credit is available).');
+}
+
 const Quota = {
   _PROP: 'GEMINI_QUOTA_PAUSED_ON',
   _TZ: 'America/Los_Angeles',
