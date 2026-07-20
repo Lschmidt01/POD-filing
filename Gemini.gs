@@ -84,10 +84,14 @@ const Gemini = {
     const code = res.getResponseCode();
     const text = res.getContentText();
     if (code !== 200) {
-      // Distinguish the per-DAY quota (won't clear until reset) from other errors,
-      // so the pipeline can pause itself for the day instead of churning.
-      if (code === 429 && /per\s*day|"[^"]*PerDay[^"]*"/i.test(text)) {
-        throw new Error('GEMINI_QUOTA_EXHAUSTED: daily request limit reached. ' + text.slice(0, 300));
+      // Any 429 that reaches here has already survived _fetchWithRetry's 6 backed-off
+      // retries (~90s+). That is NOT a momentary per-minute blip — it means the day's
+      // request quota (or the prepaid balance) is exhausted. Signal the circuit breaker
+      // to pause for the day, so run() stops instead of re-queuing the email and firing
+      // ~6 calls/scan × 144 runs/day = ~1,000 futile 429s (the runaway loop we hit).
+      // The daily quota resets at midnight Pacific; resumeNow() clears the pause sooner.
+      if (code === 429) {
+        throw new Error('GEMINI_QUOTA_EXHAUSTED: request quota exhausted (HTTP 429). ' + text.slice(0, 300));
       }
       throw new Error('Gemini HTTP ' + code + ': ' + text.slice(0, 600));
     }

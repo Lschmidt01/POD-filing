@@ -39,11 +39,12 @@ const Quota = {
     props.setProperty(this._PROP, this._ptDate());
     try {
       const to = Config.get('STORAGE_ALERT_RECIPIENT') || Session.getEffectiveUser().getEmail();
-      GmailApp.sendEmail(to, 'POD Filing: paused — Gemini daily limit reached',
-        'The BOL filing system hit Gemini\'s free daily request limit, so it paused '
-        + 'itself for today. It resumes automatically after the limit resets (around '
-        + 'midnight Pacific). Your scans are safe in the mailbox and will file then — '
-        + 'nothing you need to do.');
+      GmailApp.sendEmail(to, 'POD Filing: paused — Gemini daily request limit reached',
+        'The BOL filing system hit Gemini\'s daily request limit for today, so it paused '
+        + 'itself instead of retrying a dead quota. It resumes automatically after the limit '
+        + 'resets (around midnight Pacific). Your scans are safe in the mailbox and will file '
+        + 'then — nothing you need to do. (If you just topped up credit and want it to resume '
+        + 'immediately, run resumeNow() in the script.)');
     } catch (e) { /* notification is best-effort */ }
   },
 
